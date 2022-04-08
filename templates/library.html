@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>Library Management</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <style media="screen">
+    * {
+      box-sizing: border-box;
+    }
+
+    table {
+      background-color: green;
+      border-radius: 5px;
+    }
+
+    tr,
+    td,
+    th {
+      border-spacing: 6px;
+      border: 3px solid yellow;
+    }
+
+    td {
+      text-align: center;
+      background-color: white;
+    }
+
+    .cardss {
+      width: 50%;
+      float: left;
+      padding-top: 2%;
+      padding-left:5%;
+    }
+    .cardss2{
+      width: 50%;
+      float: right;
+      padding: 2%;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="cardss">
+    <div class="card" style="width: 18rem;">
+      <div class="card-body">
+        <h5 class="card-title">Books Database</h5>
+        <p class="card-text">All the api for books database are here</p>
+        <a href='/books' class="btn btn-primary">Check Apis</a>
+      </div>
+    </div>
+    <br>
+    <br>
+    <div class="card text-center" style="width: 18rem;">
+      <div class="card-body">
+        <h5 class="card-title">Transaction Database</h5>
+        <p class="card-text">All the apis for transaction database are here</p>
+        <a href="/transaction" class="btn btn-primary">Check Apis</a>
+      </div>
+    </div>
+
+
+  </div>
+  <div class="cardss2">
+    <h3>Books in Database</h3>
+    <table width="100%">
+      <thead>
+      <tr>
+        <th>BookName</th>
+        <th>rentPerDay</th>
+        <th>Category</th>
+      </tr>
+      </thead>
+      <tbody id="bookdb">
+
+      </tbody>
+    </table>
+  </div>
+  <script type="text/javascript">
+       const HOST='http://127.0.0.1:5000/'
+        var params = {
+          method: "POST",
+          credentials: "include",
+          cache: "no-cache",
+          headers: new Headers({
+            "content-type": "application/json"
+          })
+        }
+
+          function parseData(res) {
+            res.json().then((data) => {
+              var innerText=``;
+              for(let i in data){
+                name = data[i]['bookName'];
+                rent = data[i]['rentPerDay'];
+                category = data[i]['category'];
+                innerText += `<tr>
+                <td>${name}</td>
+                <td>${category}</td>
+                <td>${rent}</td>
+                </tr>`
+              }
+              if(innerText===''){
+              innerText=`<h3>No such data exist</h3>`}
+              document.getElementById('bookdb').innerHTML = innerText;
+            })
+
+          }
+
+          function getByName() {
+            params['body'] = JSON.stringify({
+                bookName: ''
+              }),
+              fetch(`${HOST}getByName`, params)
+              .then((res) => {
+                parseData(res);
+              })
+              .catch((err) => {
+                alert("Error is " + err);
+              })
+          }
+        getByName()
+  </script>
+</body>
+
+</html>
