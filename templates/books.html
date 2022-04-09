@@ -4,8 +4,8 @@
 <head>
   <meta charset="utf-8">
   <title>Books Api</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <style media="screen">
     * {
       box-sizing: border-box;
@@ -32,9 +32,10 @@
       width: 50%;
       float: left;
       padding-top: 2%;
-      padding-left:5%;
+      padding-left: 5%;
     }
-    .right{
+
+    .right {
       width: 50%;
       float: right;
       padding: 2%;
@@ -43,7 +44,7 @@
 </head>
 
 <body>
-<h3 style="text-align:center">Book Database Query</h3>
+  <h3 style="text-align:center">Book Database Query</h3>
   <div class="left">
     <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
       <div class="card-header">Search Book By Name</div>
@@ -56,21 +57,21 @@
     <div class="card text-white bg-secondary mb-3" style="max-width: 18rem;">
       <div class="card-header">Search Book By Rent</div>
       <div class="card-body">
-          <label for="rentPerDay">Rent:</label>
-          <input type="text" required id='rent' name="rentPerDay" placeholder="rent">
-          <input type="submit" value="GetBooks" onclick="getByRent()">
+        <label for="rentPerDay">Rent:</label>
+        <input type="text" required id='rent' name="rentPerDay" placeholder="rent">
+        <input type="submit" value="GetBooks" onclick="getByRent()">
       </div>
     </div>
     <div class="card text-white bg-success mb-3" style="max-width: 18rem;">
       <div class="card-header">Search Book By Rent,Category,Name</div>
       <div class="card-body">
-          <label for="rentPerDay">Rent:</label>
-          <input type="text" required name="rentPerDay" id='arent' placeholder="rent">
-          <label for="bookName">Name:</label>
-          <input type="text" required name="bookName" id='aname' placeholder="bookName">
-          <label for="category">Cat:</label>
-          <input type="text" required name="category" id='acat' placeholder="category">
-          <input type="submit" value="GetBooks" onclick="getByRentCatName()">
+        <label for="rentPerDay">Rent:</label>
+        <input type="text" required name="rentPerDay" id='arent' placeholder="rent">
+        <label for="bookName">Name:</label>
+        <input type="text" required name="bookName" id='aname' placeholder="bookName">
+        <label for="category">Cat:</label>
+        <input type="text" required name="category" id='acat' placeholder="category">
+        <input type="submit" value="GetBooks" onclick="getByRentCatName()">
       </div>
     </div>
 
@@ -91,82 +92,85 @@
     </table>
   </div>
   <script type="text/javascript">
-            const HOST = 'http://3.110.120.239:5000/'
+    HOST = 'http://3.110.120.239:4000/'
 
-        var params = {
-          method: "POST",
-          credentials: "include",
-          cache: "no-cache",
-          headers: new Headers({
-            "content-type": "application/json"
-          })
-        }
 
-          function parseData(res) {
-            res.json().then((data) => {
-              var innerText = ``
-              for(let i in data){
-                name = data[i]['bookName'];
-                rent = data[i]['rentPerDay'];
-                category = data[i]['category'];
-                innerText += `<tr>
+    var params = {
+      method: "POST",
+      credentials: "include",
+      cache: "no-cache",
+      headers: new Headers({
+        "content-type": "application/json"
+      })
+    }
+
+    function parseData(res) {
+      res.json().then((data) => {
+        var innerText = ``
+        for (let i in data) {
+          name = data[i]['bookName'];
+          rent = data[i]['rentPerDay'];
+          category = data[i]['category'];
+          innerText += `<tr>
                 <td>${name}</td>
                 <td>${category}</td>
                 <td>${rent}</td>
                 </tr>`
-              }
-              if(innerText===''){
-              innerText='<h3>No such data exist</h3>'}
-              document.getElementById('tbody').innerHTML = innerText;
-            })
+        }
+        if (innerText === '') {
+          innerText = '<h3>No such data exist</h3>'
+        }
+        document.getElementById('tbody').innerHTML = innerText;
+      })
 
-          }
+    }
 
-          function getByName() {
-            params['body'] = JSON.stringify({
-                bookName: ''
-              }),
-              fetch(`${HOST}getByName`, params)
-              .then((res) => {
-                parseData(res);
-              })
-              .catch((err) => {
-                alert("Error is " + err);
-              })
-          }
+    function getByName() {
+      var book = document.getElementById('name').value
+      params['body'] = JSON.stringify({
+          bookName: book
+        }),
+        fetch(`${HOST}getByName`, params)
+        .then((res) => {
+          parseData(res);
+        })
+        .catch((err) => {
+          alert("Error is " + err);
+        })
+    }
 
-          function getByRent() {
-            var rent = document.getElementById('rent').value;
-            params['body'] = JSON.stringify({
-                rentPerDay: rent
-              }),
-              fetch(`${HOST}getByRent`, params)
-              .then((res) => {
-                parseData(res);
-              })
-              .catch((err) => {
-                alert("Error is " + err);
-              })
-          }
+    function getByRent() {
+      var rent = document.getElementById('rent').value;
+      params['body'] = JSON.stringify({
+          rentPerDay: rent
+        }),
+        fetch(`${HOST}getByRent`, params)
+        .then((res) => {
+          parseData(res);
+        })
+        .catch((err) => {
+          alert("Error is " + err);
+        })
+    }
 
-          function getByRentCatName() {
-            var name = document.getElementById('aname').value;
-            var rent = document.getElementById('arent').value;
-            var cat = document.getElementById('acat').value;
-            params['body'] = JSON.stringify({
-                bookName: name,
-                rentPerDay:rent,
-                category:cat
-              }),
-              fetch(`${HOST}getByNameRentCategory`, params)
-              .then((res) => {
-                parseData(res);
-              })
-              .catch((err) => {
-                alert("Error is " + err);
-              })
-          }
-        </script>
+    function getByRentCatName() {
+      var name = document.getElementById('aname').value;
+      var rent = document.getElementById('arent').value;
+      var cat = document.getElementById('acat').value;
+      params['body'] = JSON.stringify({
+          bookName: name,
+          rentPerDay: rent,
+          category: cat
+        }),
+        fetch(`${HOST}getByNameRentCategory`, params)
+        .then((res) => {
+          parseData(res);
+        })
+        .catch((err) => {
+          alert("Error is " + err);
+        })
+    }
+  </script>
 
 </body>
 

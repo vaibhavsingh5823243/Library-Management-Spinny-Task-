@@ -53,7 +53,7 @@ class BookDatabase:
     def fetchByNameRentCategory(self, queryData):
         try:
             coll = self.bookDb['bookinfo']
-            catPattern = re.compile(queryData['category'],re.IGNORECASE)
+            catPattern = re.compile(queryData['category'], re.IGNORECASE)
             bnPattern = re.compile(queryData['bookName'], re.IGNORECASE)
             booksObj = coll.find({"$and": [{"bookName": {"$regex": bnPattern}}, {"category": {"$regex": catPattern}},
                                            {"rentPerDay": {"$lte": int(queryData['rentPerDay'])}}]}, {"_id": 0})
@@ -74,6 +74,8 @@ class TransactionDataBase(BookDatabase):
             rentPerDay = self.filter(data['bookName'])
             if rentPerDay:
                 coll = self.transactionDb['transactionInfo']
+                for key in data:
+                    data[key] = data[key].lower()
                 data['issueDate'] = datetime.strptime(data['issueDate'], "%d-%M-%Y")
                 data['returnDate'] = -1
                 data['rent'] = 0
@@ -113,7 +115,7 @@ class TransactionDataBase(BookDatabase):
             totalRent = [book for book in bookRentObj]
             return totalRent[0]
         except Exception as e:
-            #print(e)
+            # print(e)
             return False
 
     def getAllBooks(self, personName):
@@ -131,7 +133,7 @@ class TransactionDataBase(BookDatabase):
             coll = self.transactionDb['transactionInfo']
 
             bookObj = coll.find({"issueDate": {"$lte": date}}, {"_id": 0, "bookName": 1, "personName": 1})
-            data=[i for i in bookObj]
+            data = [i for i in bookObj]
             return data
         except Exception as e:
             return False
@@ -145,7 +147,7 @@ class TransactionDataBase(BookDatabase):
                                          {"_id": 0, "personName": 1})
             person = [per['personName'] for per in personObj]
             currentPerson = [per['personName'] for per in currentPersonObj]
-            data={"IssuedBooks":person,"CurrentlyIssued":currentPerson}
+            data = {"IssuedBooks": person, "CurrentlyIssued": currentPerson}
             return data
         except Exception as e:
             return False

@@ -40,24 +40,26 @@
       float: right;
       padding: 2%;
     }
-    .leftchild{
+
+    .leftchild {
       width: 50%;
       float: left;
       padding-top: 2%;
       padding-left: 5%;
     }
 
-    .rightchild{
+    .rightchild {
       width: 50%;
       float: right;
       padding: 2%;
     }
-    .card-body{
+
+    .card-body {
       text-align: center;
     }
 
-    input{
-      margin:2px;
+    input {
+      margin: 2px;
       text-align: center;
     }
   </style>
@@ -124,7 +126,7 @@
     </table>
   </div>
   <script type="text/javascript">
-    const HOST = 'http://3.110.120.239:5000/'
+    HOST = 'http://3.110.120.239:4000/'
     var params = {
       method: "POST",
       credentials: "include",
@@ -137,151 +139,154 @@
 
 
     function issueBook() {
-        var book = document.getElementById('sbname').value;
-        var person = document.getElementById('spname').value;
-        var date = document.getElementById('sdate').value;
-        params['body'] = JSON.stringify({
-            bookName: book,
-            personName:person,
-            issueDate:date
-          }),
+      var book = document.getElementById('sbname').value;
+      var person = document.getElementById('spname').value;
+      var date = document.getElementById('sdate').value;
+      params['body'] = JSON.stringify({
+          bookName: book,
+          personName: person,
+          issueDate: date
+        }),
         fetch(`${HOST}issueBook`, params)
-          .then((res) => {
-            res.json().then((data)=>{
-              alert(data['message'])
-            })
+        .then((res) => {
+          res.json().then((data) => {
+            alert(data['message'])
           })
-          .catch((err) => {
-            alert("Error is " + err);
-          })
-      }
-      function returnBook() {
-        var book = document.getElementById('rbname').value;
-        var person = document.getElementById('rpname').value;
-        var date = document.getElementById('rdate').value;
-        params['body'] = JSON.stringify({
-            bookName: book,
-            personName:person,
-            returnDate:date
-          }),
-        fetch(`${HOST}returnBook`, params)
-          .then((res) => {
-            res.json().then((data)=>{
-              alert(data['message'])
-            })
-          })
-          .catch((err) => {
-            alert("Error is " + err);
-          })
-      }
+        })
+        .catch((err) => {
+          alert("Error is " + err);
+        })
+    }
 
-      function getPerson() {
-        var book = document.getElementById('pbook').value;
-        params['body'] = JSON.stringify({
-            bookName: book
-          }),
+    function returnBook() {
+      var book = document.getElementById('rbname').value;
+      var person = document.getElementById('rpname').value;
+      var date = document.getElementById('rdate').value;
+      params['body'] = JSON.stringify({
+          bookName: book,
+          personName: person,
+          returnDate: date
+        }),
+        fetch(`${HOST}returnBook`, params)
+        .then((res) => {
+          res.json().then((data) => {
+            alert(data['message'])
+          })
+        })
+        .catch((err) => {
+          alert("Error is " + err);
+        })
+    }
+
+    function getPerson() {
+      var book = document.getElementById('pbook').value;
+      params['body'] = JSON.stringify({
+          bookName: book
+        }),
         fetch(`${HOST}personList`, params)
-          .then((res) => {
-            res.json().then((data)=>{
-              var len=data['IssuedBooks'].length;
-              var innerHTML=`<tr>
+        .then((res) => {
+          res.json().then((data) => {
+            var len = data['IssuedBooks'].length;
+            var innerHTML = `<tr>
               <th>Book Issued</th>
               <th>Currently Book Issued</th>
               </tr>`
-              for(let i=0;i<len;i++){
-              innerHTML+=`<tr>
+            for (let i = 0; i < len; i++) {
+              innerHTML += `<tr>
               <td>${data['IssuedBooks'][i]}</td>
               <td>${data['CurrentlyIssued'][i]}</td>
               </tr>`
-              }
-              innerHTML=innerHTML.replaceAll('undefined','-')
-              if(innerHTML==='')
-              innerHTML=`<h1>No data available</h1>`
-              document.getElementById('table').innerHTML=innerHTML;
-            })
+            }
+            innerHTML = innerHTML.replaceAll('undefined', '-')
+            if (len === 0) {
+              innerHTML = `<h1>No data available</h1>`
+            }
+            document.getElementById('table').innerHTML = innerHTML;
           })
-          .catch((err) => {
-            alert("Error is " + err);
-          })
-      }
-      function getRent() {
-        var book = document.getElementById('gbook').value;
-        params['body'] = JSON.stringify({
-            bookName: book
-          }),
+        })
+        .catch((err) => {
+          alert("Error is " + err);
+        })
+    }
+
+    function getRent() {
+      var book = document.getElementById('gbook').value;
+      params['body'] = JSON.stringify({
+          bookName: book
+        }),
         fetch(`${HOST}totalRent`, params)
-          .then((res) => {
-            res.json().then((data)=>{
-              var innerHTML=`<h3>TotalRent generated by <bold>${data['_id']}</bold>:<bold>${data['TotalRent']}</bold></h3>`;
+        .then((res) => {
+          res.json().then((data) => {
+            var innerHTML = `<h3>TotalRent generated by <bold>${data['_id']}</bold>:<bold>${data['TotalRent']}</bold></h3>`;
 
-              if(data['TotalRent']==='undefined'){
-               innerHTML='No data available';
-              }
-              document.getElementById('table').innerHTML = innerHTML;
-            })
+            if (data['TotalRent'] === undefined) {
+              innerHTML = 'No data available';
+            }
+            document.getElementById('table').innerHTML = innerHTML;
           })
-          .catch((err) => {
-            alert("Error is " + err);
-          })
-      }
+        })
+        .catch((err) => {
+          alert("Error is " + err);
+        })
+    }
 
 
-      function getBooks(){
-        var person = document.getElementById('lpname').value;
-        params['body']=JSON.stringify({
-          personName:person
-        });
-        fetch(`${HOST}totalBook`,params)
-        .then((res)=>{
-          res.json().then((data)=>{
-            var len=data.length;
-            var innerHTML=`<tr>
+    function getBooks() {
+      var person = document.getElementById('lpname').value;
+      params['body'] = JSON.stringify({
+        personName: person
+      });
+      fetch(`${HOST}totalBook`, params)
+        .then((res) => {
+          res.json().then((data) => {
+            var len = data.length;
+            var innerHTML = `<tr>
             <td>BookNames</td>
             </tr>`;
-            for(var i=0;i<len;i++){
-               innerHTML+=`<tr>
+            for (var i = 0; i < len; i++) {
+              innerHTML += `<tr>
                <td>${data[i]['bookName']}</td>
                </tr>`
             }
-            if(innerHTML===''){
-              innerHTML="No Data available";
+            if (len === 0) {
+              innerHTML = "No Data available";
             }
-            document.getElementById('table').innerHTML=innerHTML;
+            document.getElementById('table').innerHTML = innerHTML;
           })
         })
-        .catch((err)=>{
-          alert("Error is "+err);
+        .catch((err) => {
+          alert("Error is " + err);
         })
-      }
+    }
 
-      function getPersonBooks(){
-        var dates=document.getElementById('date').value;
-        params['body']=JSON.stringify({
-          dates:dates
-        })
-        fetch(`${HOST}issuedBooks`,params)
-        .then((res)=>{
-          res.json().then((data)=>{
-            var innerHTML=`<tr>
+    function getPersonBooks() {
+      var dates = document.getElementById('date').value;
+      params['body'] = JSON.stringify({
+        dates: dates
+      })
+      fetch(`${HOST}issuedBooks`, params)
+        .then((res) => {
+          res.json().then((data) => {
+            var innerHTML = `<tr>
             <th>PersonName</th>
             <th>BookName</th>
             </tr>`
-            for(var i in data){
-              innerHTML+=`<tr>
+            for (var i in data) {
+              innerHTML += `<tr>
               <td>${data[i]['personName']}</td>
               <td>${data[i]['bookName']}</td>
               </tr>`
             }
-            if(innerHTML===''){
-              innerHTML=`<h3>No data available</h3>`
+            if (data.length === 0) {
+              innerHTML = `<h3>No data available</h3>`
             }
-            document.getElementById('table').innerHTML=innerHTML
+            document.getElementById('table').innerHTML = innerHTML
           })
         })
-        .catch((err)=>{
-          alert("Error is "+err)
+        .catch((err) => {
+          alert("Error is " + err)
         })
-      }
+    }
   </script>
 
 </body>
