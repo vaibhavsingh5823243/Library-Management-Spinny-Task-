@@ -1,7 +1,18 @@
 from datetime import datetime
 
 from flask import Flask, request, render_template, make_response, jsonify
+import sentry_sdk
+from sentry_sdk.integrations.flask import FlaskIntegration
 
+sentry_sdk.init(
+    dsn="https://ff8a372b175e4e59a7e05e225b746812@o1223131.ingest.sentry.io/6386441",
+    integrations=[FlaskIntegration()],
+
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for performance monitoring.
+    # We recommend adjusting this value in production.
+    traces_sample_rate=1.0
+)
 from database import BookDatabase, TransactionDataBase
 
 app = Flask(__name__)
